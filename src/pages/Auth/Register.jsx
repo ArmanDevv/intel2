@@ -39,7 +39,7 @@ const Register = () => {
             <BookOpenIcon className="h-8 w-8 text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Create Account</h1>
-          <p className="text-gray-600">Join EduFlow and start your learning journey</p>
+          <p className="text-gray-600">Join Intelliclass and start your learning journey</p>
         </div>
 
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">

@@ -17,8 +17,8 @@ export const AuthProvider = ({ children }) => {
 
   // Dummy users for demonstration
   const dummyUsers = [
-    { id: 1, email: 'student@demo.com', password: 'password123', role: 'student', name: 'Sarah Johnson' },
-    { id: 2, email: 'teacher@demo.com', password: 'password123', role: 'teacher', name: 'Dr. Michael Chen' }
+    { id: 1, email: 'student@demo.com', password: 'password@student123', role: 'student', name: 'Demo Student' },
+    { id: 2, email: 'teacher@demo.com', password: 'password@teacher123', role: 'teacher', name: 'Demo teacher' }
   ];
 
   useEffect(() => {

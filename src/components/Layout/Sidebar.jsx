@@ -37,7 +37,7 @@ const Sidebar = () => {
           ) : (
             <AcademicCapIcon className="h-8 w-8 text-primary-500" />
           )}
-          <h1 className="text-xl font-bold text-gray-900">EduFlow</h1>
+          <h1 className="text-xl font-bold text-gray-900">Intelliclass</h1>
         </div>
       </div>
       
