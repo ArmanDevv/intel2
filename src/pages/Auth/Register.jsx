@@ -1,31 +1,43 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import LoadingSpinner from '../../components/UI/LoadingSpinner';
-import { BookOpenIcon, EyeIcon, EyeOffIcon } from '@heroicons/react/outline';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import LoadingSpinner from "../../components/UI/LoadingSpinner";
+import { BookOpenIcon, EyeIcon, EyeOffIcon } from "@heroicons/react/outline";
 
 const Register = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    password: '',
-    role: 'student'
+    name: "",
+    email: "",
+    password: "",
+    role: "student",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  
-  const { register } = useAuth();
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
-      await register(formData);
+      const res = await axios.post("http://localhost:5000/api/auth/register", {
+        fullName: formData.name,
+        email: formData.email,
+        password: formData.password,
+        role: formData.role,
+      });
+
+      alert(res.data.message); // User registered successfully
+      navigate("/login"); // Redirect to login page
     } catch (err) {
-      setError(err.message || 'Registration failed');
+      if (err.response && err.response.status === 400) {
+        // Email already exists
+        setError("Email already registered. Please login instead.");
+      } else {
+        setError("Registration failed. Try again later.");
+      }
     } finally {
       setLoading(false);
     }
@@ -102,7 +114,7 @@ const Register = () => {
               <div className="relative">
                 <input
                   id="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   required
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -114,11 +126,7 @@ const Register = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
                 >
-                  {showPassword ? (
-                    <EyeOffIcon className="h-5 w-5" />
-                  ) : (
-                    <EyeIcon className="h-5 w-5" />
-                  )}
+                  {showPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
                 </button>
               </div>
             </div>
@@ -128,13 +136,13 @@ const Register = () => {
               disabled={loading}
               className="w-full btn-primary flex items-center justify-center"
             >
-              {loading ? <LoadingSpinner size="sm" /> : 'Create Account'}
+              {loading ? <LoadingSpinner size="sm" /> : "Create Account"}
             </button>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-gray-600">
-              Already have an account?{' '}
+              Already have an account?{" "}
               <Link to="/login" className="text-primary-500 font-medium hover:text-primary-600">
                 Sign in
               </Link>

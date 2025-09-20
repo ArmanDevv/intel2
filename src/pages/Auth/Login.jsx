@@ -1,39 +1,44 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useAuth } from '../../contexts/AuthContext';
-import LoadingSpinner from '../../components/UI/LoadingSpinner';
-import { EyeIcon, EyeOffIcon, BookOpenIcon } from '@heroicons/react/outline';
+// Login.jsx
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import LoadingSpinner from "../../components/UI/LoadingSpinner";
+import { EyeIcon, EyeOffIcon, BookOpenIcon } from "@heroicons/react/outline";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    email: "",
+    password: "",
+    role: "student" // default role
   });
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  
-  const { login } = useAuth();
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
-      await login(formData.email, formData.password);
+      const res = await axios.post("http://localhost:5000/api/auth/login", formData);
+
+      // Save logged-in user in localStorage
+      localStorage.setItem("user", JSON.stringify(res.data));
+
+      // Redirect based on role
+      if (res.data.role === "student") navigate("/");
+      else if (res.data.role === "teacher") navigate("/");
     } catch (err) {
-      setError(err.message || 'Login failed');
+      if (err.response && err.response.status === 400) {
+        setError("User not registered, please register or check your credentials.");
+      } else {
+        setError("Login failed. Try again later.");
+      }
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleDemoLogin = (role) => {
-    setFormData({
-      email: role === 'student' ? 'student@demo.com' : 'teacher@demo.com',
-      password: role === 'student' ? 'password@student123' : 'password@teacher123'
-    });
   };
 
   return (
@@ -53,21 +58,6 @@ const Login = () => {
               <p className="text-red-600 text-sm">{error}</p>
             </div>
           )}
-
-          <div className="mb-6 grid grid-cols-2 gap-3">
-            <button
-              onClick={() => handleDemoLogin('student')}
-              className="p-3 border border-gray-200 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
-            >
-              Demo Student
-            </button>
-            <button
-              onClick={() => handleDemoLogin('teacher')}
-              className="p-3 border border-gray-200 rounded-xl text-sm font-medium hover:bg-gray-50 transition-colors"
-            >
-              Demo Teacher
-            </button>
-          </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -92,7 +82,7 @@ const Login = () => {
               <div className="relative">
                 <input
                   id="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   required
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -104,13 +94,24 @@ const Login = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
                 >
-                  {showPassword ? (
-                    <EyeOffIcon className="h-5 w-5" />
-                  ) : (
-                    <EyeIcon className="h-5 w-5" />
-                  )}
+                  {showPassword ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
                 </button>
               </div>
+            </div>
+
+            <div>
+              <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
+                Select Role
+              </label>
+              <select
+                id="role"
+                value={formData.role}
+                onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                className="input-field"
+              >
+                <option value="student">Student</option>
+                <option value="teacher">Teacher</option>
+              </select>
             </div>
 
             <button
@@ -118,13 +119,13 @@ const Login = () => {
               disabled={loading}
               className="w-full btn-primary flex items-center justify-center"
             >
-              {loading ? <LoadingSpinner size="sm" /> : 'Sign In'}
+              {loading ? <LoadingSpinner size="sm" /> : "Sign In"}
             </button>
           </form>
 
           <div className="mt-6 text-center">
             <p className="text-gray-600">
-              Don't have an account?{' '}
+              Don't have an account?{" "}
               <Link to="/register" className="text-primary-500 font-medium hover:text-primary-600">
                 Sign up
               </Link>

@@ -1,5 +1,4 @@
-import React from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   HomeIcon,
@@ -12,7 +11,14 @@ import {
 } from '@heroicons/react/outline';
 
 const Sidebar = () => {
-  const { user } = useAuth();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   const studentNavItems = [
     { name: 'Dashboard', href: '/', icon: HomeIcon },
@@ -42,7 +48,7 @@ const Sidebar = () => {
       </div>
       
       <nav className="flex-1 px-4 space-y-1">
-        {navItems.map((item) => (
+        {navItems?.map((item) => (
           <NavLink
             key={item.name}
             to={item.href}
@@ -68,8 +74,8 @@ const Sidebar = () => {
             </span>
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-gray-900 truncate">{user?.name}</p>
-            <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+            <p className="text-sm font-medium text-gray-900 truncate">{user?.name || 'User'}</p>
+            <p className="text-xs text-gray-500 capitalize">{user?.role || 'role'}</p>
           </div>
         </div>
       </div>

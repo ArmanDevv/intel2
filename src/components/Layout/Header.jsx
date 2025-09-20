@@ -1,11 +1,17 @@
-import React, { useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import React, { useState, useEffect } from 'react';
 import { BellIcon, SearchIcon, UserIcon } from '@heroicons/react/outline';
 import UserMenu from './UserMenu';
 
 const Header = () => {
-  const { user } = useAuth();
+  const [user, setUser] = useState(null);
   const [showUserMenu, setShowUserMenu] = useState(false);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
 
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4">
@@ -38,8 +44,8 @@ const Header = () => {
                 </span>
               </div>
               <div className="hidden md:block text-left">
-                <p className="text-sm font-medium text-gray-900">{user?.name}</p>
-                <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+                <p className="text-sm font-medium text-gray-900">{user?.name || 'User'}</p>
+                <p className="text-xs text-gray-500 capitalize">{user?.role || 'role'}</p>
               </div>
             </button>
             

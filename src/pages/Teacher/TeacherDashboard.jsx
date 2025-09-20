@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   CloudUploadIcon,
@@ -11,7 +10,15 @@ import {
 } from '@heroicons/react/outline';
 
 const TeacherDashboard = () => {
-  const { user } = useAuth();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
   const [stats] = useState({
     totalResources: 28,
     generatedContent: 145,
@@ -81,11 +88,13 @@ const TeacherDashboard = () => {
     { name: 'Summaries', count: 22, color: 'text-purple-600', bg: 'bg-purple-100' }
   ];
 
+  if (!user) return null; // prevent rendering before user is loaded
+
   return (
     <div className="space-y-8">
       {/* Welcome Section */}
       <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl p-8 text-white">
-        <h1 className="text-3xl font-bold mb-2">Welcome, {user?.name}!</h1>
+        <h1 className="text-3xl font-bold mb-2">Welcome, {user.name}!</h1>
         <p className="text-purple-100 text-lg">Ready to create amazing learning experiences?</p>
       </div>
 

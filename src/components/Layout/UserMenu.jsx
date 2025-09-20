@@ -1,9 +1,7 @@
 import React, { useRef, useEffect } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
 import { LogoutIcon, CogIcon, UserIcon } from '@heroicons/react/outline';
 
 const UserMenu = ({ onClose }) => {
-  const { logout } = useAuth();
   const menuRef = useRef();
 
   useEffect(() => {
@@ -18,8 +16,9 @@ const UserMenu = ({ onClose }) => {
   }, [onClose]);
 
   const handleLogout = () => {
-    logout();
+    localStorage.removeItem('user'); // remove logged-in user
     onClose();
+    window.location.href = '/login'; // redirect to login page
   };
 
   return (
