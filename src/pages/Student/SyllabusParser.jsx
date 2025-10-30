@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import {
   DocumentTextIcon,
   UploadIcon,
@@ -14,56 +15,108 @@ const SyllabusParser = () => {
   const [extractedTopics, setExtractedTopics] = useState([]);
   const [generatedPlaylists, setGeneratedPlaylists] = useState([]);
   const [currentStep, setCurrentStep] = useState(1);
+  const [userId, setUserId] = useState('');
+
+  useEffect(() => {
+    const storedUserId = localStorage.getItem('userId');
+    if (storedUserId) setUserId(storedUserId);
+  }, []);
 
   const handleSyllabusSubmit = async (e) => {
     e.preventDefault();
     setIsProcessing(true);
     setCurrentStep(2);
 
-    // Simulate topic extraction with NLP
-    setTimeout(() => {
-      const topics = [
-        'Introduction to Machine Learning',
-        'Supervised Learning Algorithms',
-        'Neural Networks and Deep Learning',
-        'Natural Language Processing',
-        'Computer Vision Fundamentals',
-        'Reinforcement Learning',
-        'Data Preprocessing Techniques',
-        'Model Evaluation and Validation'
-      ];
+    // Extract topics from syllabus text
+    const topics = syllabusText
+      .split(',')
+      .map(topic => topic.trim())
+      .filter(topic => topic.length > 0);
+
+    setTimeout(async () => {
       setExtractedTopics(topics);
       setCurrentStep(3);
-      
-      // Simulate playlist generation
-      setTimeout(() => {
-        const playlists = topics.map((topic, index) => ({
-          id: index + 1,
-          title: topic,
-          videoCount: Math.floor(Math.random() * 15) + 5,
-          duration: `${Math.floor(Math.random() * 5) + 1}h ${Math.floor(Math.random() * 60)}m`,
-          videos: [
-            {
-              id: 1,
-              title: `${topic} - Complete Tutorial`,
-              duration: '15:23',
-              views: '1.2M views',
-              channel: 'TechEdu Academy'
-            },
-            {
-              id: 2,
-              title: `${topic} Explained Simply`,
-              duration: '12:45',
-              views: '850K views',
-              channel: 'LearnCode'
-            }
-          ]
-        }));
-        setGeneratedPlaylists(playlists);
-        setCurrentStep(4);
-        setIsProcessing(false);
-      }, 2000);
-    }, 3000);
+
+      try {
+        // Call backend to get videos for each topic
+        const response = await axios.post('http://localhost:5000/api/youtube/search', {
+          topics,
+          maxResults: topics.length
+        });
+        const videos = response.data.videos || [];
+
+        setGeneratedPlaylists([
+          {
+            id: 1,
+            title: "Best Playlist for Your Syllabus",
+            videoCount: videos.length,
+            videos,
+          }
+        ]);
+      } catch (err) {
+        setGeneratedPlaylists([
+          {
+            id: 1,
+            title: "Best Playlist for Your Syllabus",
+            videoCount: 0,
+            videos: [],
+          }
+        ]);
+      }
+
+      setCurrentStep(4);
+      setIsProcessing(false);
+    }, 1500);
+  };
+
+  const handleParseAgain = async () => {
+    setIsProcessing(true);
+    setCurrentStep(3);
+
+    const topics = extractedTopics;
+    try {
+      const response = await axios.post('http://localhost:5000/api/youtube/search', {
+        topics,
+        maxResults: topics.length
+      });
+      const videos = response.data.videos || [];
+
+      setGeneratedPlaylists([
+        {
+          id: 1,
+          title: "Best Playlist for Your Syllabus",
+          videoCount: videos.length,
+          videos,
+        }
+      ]);
+    } catch (err) {
+      setGeneratedPlaylists([
+        {
+          id: 1,
+          title: "Best Playlist for Your Syllabus",
+          videoCount: 0,
+          videos: [],
+        }
+      ]);
+    }
+    setCurrentStep(4);
+    setIsProcessing(false);
+  };
+
+  const savePlaylist = async (playlist) => {
+    if (!userId) {
+      alert('User not logged in!');
+      return;
+    }
+    try {
+      await axios.post('http://localhost:5000/api/youtube/save-playlist', {
+        userId,
+        playlist
+      });
+      alert('Playlist saved!');
+    } catch (err) {
+      alert('Failed to save playlist');
+    }
   };
 
   const steps = [
@@ -123,7 +176,7 @@ const SyllabusParser = () => {
               <textarea
                 value={syllabusText}
                 onChange={(e) => setSyllabusText(e.target.value)}
-                placeholder="Paste your syllabus content here... Include course topics, learning objectives, and curriculum outline."
+                placeholder="Enter syllabus topics separated by commas (e.g. Machine Learning, NLP, Deep Learning)"
                 className="input-field h-64 resize-none"
                 required
               />
@@ -174,7 +227,7 @@ const SyllabusParser = () => {
         <div className="space-y-6">
           <div className="card">
             <h2 className="text-xl font-semibold text-gray-900 mb-4">
-              🎉 Successfully Generated {generatedPlaylists.length} Playlists!
+              🎉 Successfully Generated {generatedPlaylists.length} Playlist!
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {extractedTopics.map((topic, index) => (
@@ -186,33 +239,48 @@ const SyllabusParser = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {generatedPlaylists.slice(0, 4).map((playlist) => (
+          <div className="grid grid-cols-1 gap-6">
+            {generatedPlaylists.map((playlist) => (
               <div key={playlist.id} className="card hover:scale-105 transition-all duration-200">
                 <div className="flex items-start justify-between mb-4">
                   <h3 className="font-semibold text-gray-900">{playlist.title}</h3>
                   <div className="flex space-x-2">
-                    <button className="btn-secondary text-xs py-1 px-3">Preview</button>
-                    <button className="btn-primary text-xs py-1 px-3">Save</button>
+                    <button className="btn-secondary text-xs py-1 px-3" onClick={handleParseAgain}>Parse Again</button>
+                    <button className="btn-primary text-xs py-1 px-3" onClick={() => savePlaylist(playlist)}>Save</button>
                   </div>
                 </div>
                 
                 <div className="space-y-3">
                   <div className="flex items-center text-sm text-gray-600">
                     <PlayIcon className="h-4 w-4 mr-2" />
-                    {playlist.videoCount} videos • {playlist.duration}
+                    {playlist.videoCount} videos
                   </div>
                   
                   <div className="space-y-2">
-                    {playlist.videos.map((video) => (
-                      <div key={video.id} className="flex items-center p-2 bg-gray-50 rounded-lg">
-                        <div className="w-16 h-12 bg-gray-200 rounded flex items-center justify-center mr-3">
-                          <PlayIcon className="h-4 w-4 text-gray-500" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium text-gray-900 truncate">{video.title}</p>
-                          <p className="text-xs text-gray-500">{video.channel} • {video.duration}</p>
-                        </div>
+                    {playlist.videos.map((video, idx) => (
+                      <div key={video.topic} className="flex items-center p-2 bg-gray-50 rounded-lg">
+                        {video.id ? (
+                          <>
+                            <a
+                              href={`https://www.youtube.com/watch?v=${video.id}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-16 h-12 bg-gray-200 rounded flex items-center justify-center mr-3"
+                            >
+                              <img src={video.thumbnail} alt={video.title} className="w-full h-full object-cover rounded" />
+                            </a>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm font-medium text-gray-900 truncate">{video.title}</p>
+                              <p className="text-xs text-gray-500">{video.channel}</p>
+                              <p className="text-xs text-gray-400 italic">{video.topic}</p>
+                            </div>
+                          </>
+                        ) : (
+                          <div className="flex-1 min-w-0 ml-3">
+                            <p className="text-sm font-medium text-gray-900 truncate">No video found</p>
+                            <p className="text-xs text-gray-400 italic">{video.topic}</p>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -221,20 +289,6 @@ const SyllabusParser = () => {
             ))}
           </div>
 
-          <div className="flex justify-center space-x-4">
-            <button
-              onClick={() => {
-                setCurrentStep(1);
-                setSyllabusText('');
-                setExtractedTopics([]);
-                setGeneratedPlaylists([]);
-              }}
-              className="btn-secondary"
-            >
-              Parse Another Syllabus
-            </button>
-            <button className="btn-primary">Save All Playlists</button>
-          </div>
         </div>
       )}
     </div>
