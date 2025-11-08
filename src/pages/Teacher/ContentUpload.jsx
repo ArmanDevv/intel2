@@ -29,68 +29,105 @@ const ContentUpload = () => {
     setUploadedFiles(prev => [...prev, ...fileData]);
   };
 
+  // const processFiles = async () => {
+  //   setIsProcessing(true);
+  //   setCurrentStep(2);
+
+  //   // Simulate AI processing
+  //   setTimeout(() => {
+  //     const content = {
+  //       assignments: [
+  //         {
+  //           id: 1,
+  //           title: 'Neural Network Architecture Design',
+  //           type: 'Problem Set',
+  //           questions: 5,
+  //           difficulty: 'Intermediate',
+  //           estimatedTime: '45 minutes'
+  //         },
+  //         {
+  //           id: 2,
+  //           title: 'Activation Functions Analysis',
+  //           type: 'Essay',
+  //           questions: 3,
+  //           difficulty: 'Advanced',
+  //           estimatedTime: '60 minutes'
+  //         }
+  //       ],
+  //       flashcards: [
+  //         {
+  //           id: 1,
+  //           front: 'What is backpropagation?',
+  //           back: 'A supervised learning algorithm used to train neural networks by calculating gradients and updating weights.'
+  //         },
+  //         {
+  //           id: 2,
+  //           front: 'Define overfitting',
+  //           back: 'When a model performs well on training data but poorly on unseen data due to learning noise rather than patterns.'
+  //         }
+  //       ],
+  //       summaries: [
+  //         {
+  //           id: 1,
+  //           title: 'Neural Networks Overview',
+  //           content: 'Neural networks are computing systems inspired by biological neural networks...',
+  //           keyPoints: [
+  //             'Artificial neurons process and transmit information',
+  //             'Learning occurs through weight adjustment',
+  //             'Multiple layers enable complex pattern recognition'
+  //           ]
+  //         }
+  //       ],
+  //       matchedTopics: [
+  //         'Deep Learning Fundamentals',
+  //         'Neural Network Architecture',
+  //         'Machine Learning Algorithms',
+  //         'Artificial Intelligence Concepts'
+  //       ]
+  //     };
+
+  //     setGeneratedContent(content);
+  //     setCurrentStep(3);
+  //     setIsProcessing(false);
+  //   }, 4000);
+  // };
   const processFiles = async () => {
-    setIsProcessing(true);
-    setCurrentStep(2);
+  if (uploadedFiles.length === 0) {
+    alert("Please upload a file first!");
+    return;
+  }
 
-    // Simulate AI processing
-    setTimeout(() => {
-      const content = {
-        assignments: [
-          {
-            id: 1,
-            title: 'Neural Network Architecture Design',
-            type: 'Problem Set',
-            questions: 5,
-            difficulty: 'Intermediate',
-            estimatedTime: '45 minutes'
-          },
-          {
-            id: 2,
-            title: 'Activation Functions Analysis',
-            type: 'Essay',
-            questions: 3,
-            difficulty: 'Advanced',
-            estimatedTime: '60 minutes'
-          }
-        ],
-        flashcards: [
-          {
-            id: 1,
-            front: 'What is backpropagation?',
-            back: 'A supervised learning algorithm used to train neural networks by calculating gradients and updating weights.'
-          },
-          {
-            id: 2,
-            front: 'Define overfitting',
-            back: 'When a model performs well on training data but poorly on unseen data due to learning noise rather than patterns.'
-          }
-        ],
-        summaries: [
-          {
-            id: 1,
-            title: 'Neural Networks Overview',
-            content: 'Neural networks are computing systems inspired by biological neural networks...',
-            keyPoints: [
-              'Artificial neurons process and transmit information',
-              'Learning occurs through weight adjustment',
-              'Multiple layers enable complex pattern recognition'
-            ]
-          }
-        ],
-        matchedTopics: [
-          'Deep Learning Fundamentals',
-          'Neural Network Architecture',
-          'Machine Learning Algorithms',
-          'Artificial Intelligence Concepts'
-        ]
-      };
+  setIsProcessing(true);
+  setCurrentStep(2);
 
-      setGeneratedContent(content);
-      setCurrentStep(3);
-      setIsProcessing(false);
-    }, 4000);
-  };
+  try {
+    const fileInput = document.getElementById("file-upload");
+    const file = fileInput.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const resp = await fetch("http://localhost:4000/api/gemini/upload", {
+      method: "POST",
+      body: formData,
+    });
+
+    const json = await resp.json();
+    if (!json.ok) {
+      throw new Error(json.error || "Backend error");
+    }
+
+    // The backend returns { ok: true, fileRef, data }
+    setGeneratedContent(json.data);
+    setCurrentStep(3);
+  } catch (err) {
+    console.error("Error sending file:", err);
+    alert("There was an error processing the file. See console for details.");
+    setCurrentStep(1);
+  } finally {
+    setIsProcessing(false);
+  }
+};
+
 
   const removeFile = (fileId) => {
     setUploadedFiles(prev => prev.filter(f => f.id !== fileId));
