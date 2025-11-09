@@ -168,6 +168,8 @@ const ContentUpload = () => {
       modelUsed: uploadMetadata.modelUsed || 'Gemini AI'
     };
 
+// DEBUG: show exactly what we're about to send to the server
+console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null, 2));
     // Save to backend
     const response = await axios.post('http://localhost:5000/api/content/save', contentData);
 

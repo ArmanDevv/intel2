@@ -27,7 +27,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 10 * 1024 * 1024 // 10MB limit
+    fileSize: 50 * 1024 * 1024 // 50MB limit
   },
   fileFilter: (req, file, cb) => {
     const allowedTypes = /pdf|doc|docx|jpeg|jpg|png/;
@@ -301,6 +301,9 @@ router.post('/save', async (req, res) => {
       return res.status(400).json({ error: 'Teacher ID is required' });
     }
 
+    console.log("DEBUG: contentData being saved:", JSON.stringify(req.body, null, 2));
+    console.log("DEBUG: Saving content to MongoDB...");
+
     // Create new content document
     const newContent = new Content({
       teacherId,
@@ -312,13 +315,15 @@ router.post('/save', async (req, res) => {
       summaries,
       matchedTopics,
       modelUsed,
-      status: 'published', // or 'draft' based on your needs
+      status: 'published',
       views: 0,
       downloads: 0
     });
 
     // Save to database
     await newContent.save();
+
+    console.log("DEBUG: Content saved successfully with ID:", newContent._id);
 
     res.json({
       success: true,
@@ -329,12 +334,13 @@ router.post('/save', async (req, res) => {
 
   } catch (error) {
     console.error('Save error:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: 'Failed to save content',
-      details: error.message 
+      details: error.message
     });
   }
 });
+
 
 // GET: Fetch teacher's content
 router.get('/teacher/:teacherId', async (req, res) => {

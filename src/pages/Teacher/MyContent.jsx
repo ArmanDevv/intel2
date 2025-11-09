@@ -299,26 +299,58 @@ const MyContent = () => {
             <div className="p-6 space-y-6">
               {/* Assignments */}
               {selectedContent.assignments && selectedContent.assignments.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-semibold mb-3">Assignments</h3>
-                  <div className="space-y-3">
-                    {selectedContent.assignments.map((assignment, index) => (
-                      <div key={index} className="border border-gray-200 rounded-lg p-4">
-                        <h4 className="font-semibold text-gray-900">{assignment.title}</h4>
-                        <p className="text-sm text-gray-600 mt-1">{assignment.description}</p>
-                        <div className="flex gap-2 mt-2">
-                          <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">
-                            {assignment.type}
-                          </span>
-                          <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
-                            {assignment.difficulty}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+  <div>
+    <h3 className="text-lg font-semibold mb-3">Assignments</h3>
+    <div className="space-y-4">
+      {selectedContent.assignments.map((assignment, index) => (
+        <div key={index} className="border border-gray-200 rounded-lg p-4">
+          <h4 className="font-semibold text-gray-900">{assignment.title}</h4>
+          <p className="text-sm text-gray-600 mt-1">{assignment.description}</p>
+          <div className="flex gap-2 mt-2">
+            <span className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded">
+              {assignment.type}
+            </span>
+            <span className="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+              {assignment.difficulty}
+            </span>
+            <span className="px-2 py-1 bg-green-100 text-green-700 text-xs rounded">
+              {assignment.totalPoints} pts
+            </span>
+          </div>
+
+          {/* Questions section */}
+          {assignment.questions && assignment.questions.length > 0 && (
+            <details className="mt-3">
+              <summary className="cursor-pointer font-semibold text-blue-600">
+                View Questions
+              </summary>
+              <ul className="mt-2 ml-4 list-disc space-y-2">
+                {assignment.questions.map((q, i) => (
+                  <li key={i} className="text-sm text-gray-800">
+                    <p><strong>Q{i + 1}:</strong> {q.questionText}</p>
+
+                    {/* Options if available */}
+                    {q.options && q.options.length > 0 && (
+                      <ul className="ml-5 list-decimal text-gray-700">
+                        {q.options.map((opt, j) => (
+                          <li key={j}>{opt}</li>
+                        ))}
+                      </ul>
+                    )}
+
+                    <p className="mt-1"><strong>Answer:</strong> {q.correctAnswer}</p>
+                    <p className="text-gray-600"><strong>Explanation:</strong> {q.explanation}</p>
+                    <hr className="my-2" />
+                  </li>
+                ))}
+              </ul>
+            </details>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
+)}
 
               {/* Flashcards */}
               {selectedContent.flashcards && selectedContent.flashcards.length > 0 && (
