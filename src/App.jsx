@@ -9,7 +9,8 @@ import TeacherDashboard from './pages/Teacher/TeacherDashboard';
 import SyllabusParser from './pages/Student/SyllabusParser';
 import PlaylistManager from './pages/Student/PlaylistManager';
 import ContentUpload from './pages/Teacher/ContentUpload';
-import ResourceManager from './pages/Teacher/ResourceManager';
+// import ResourceManager from './pages/Teacher/ResourceManager';
+import MyContent from './pages/Teacher/MyContent';
 
 function ProtectedRoute({ children, allowedRoles }) {
   const storedUser = localStorage.getItem('user');
@@ -58,7 +59,7 @@ function AppRoutes() {
 
       <Route path="/resources" element={
         <ProtectedRoute allowedRoles={['teacher']}>
-          <Layout><ResourceManager /></Layout>
+          <Layout><MyContent /></Layout>
         </ProtectedRoute>
       } />
     </Routes>

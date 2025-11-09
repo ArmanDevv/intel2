@@ -24,9 +24,10 @@ router.post("/register", async (req, res) => {
 
 // Login
 // Login
+// Login
 router.post("/login", async (req, res) => {
   try {
-    const { email, password, role } = req.body; // include role
+    const { email, password, role } = req.body;
 
     // Find user by email AND role
     const user = await User.findOne({ email, role });
@@ -37,11 +38,20 @@ router.post("/login", async (req, res) => {
     if (!isMatch) 
       return res.status(400).json({ message: "Incorrect password, please try again" });
 
-    res.json({ name: user.fullName, role: user.role });
+    // ✅ FIXED: Now returning _id along with other user data
+    res.json({ 
+      _id: user._id,           // MongoDB's default ID field
+      id: user._id.toString(), // Alternative string format
+      name: user.fullName, 
+      email: user.email,
+      role: user.role 
+    });
   } catch (err) {
+    console.error("Login error:", err);
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 
 module.exports = router;
