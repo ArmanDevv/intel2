@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import {
   DocumentTextIcon,
   CollectionIcon,
@@ -20,9 +21,34 @@ const StudentDashboard = () => {
   }, []);
 
   const [stats, setStats] = useState({
-    totalPlaylists: 12,
-    totalVideos: 147
+    totalPlaylists: 0,
+    totalVideos: 0
   });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const storedUserId = localStorage.getItem('userId');
+        if (!storedUserId) return;
+
+        const res = await axios.get(`http://localhost:5000/api/youtube/get-playlists/${storedUserId}`);
+        const playlists = res.data.playlists || [];
+
+        const totalPlaylists = playlists.length;
+        const totalVideos = playlists.reduce((acc, p) => {
+          // Prefer explicit videoCount, otherwise count videos array
+          const count = typeof p.videoCount === 'number' ? p.videoCount : (p.videos ? p.videos.length : 0);
+          return acc + count;
+        }, 0);
+
+        setStats({ totalPlaylists, totalVideos });
+      } catch (err) {
+        console.error('Error fetching playlist stats:', err);
+      }
+    };
+
+    fetchStats();
+  }, []);
 
   const recentPlaylists = [
     {

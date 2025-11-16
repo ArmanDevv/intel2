@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import {
   CloudUploadIcon,
   DocumentIcon,
@@ -18,6 +19,8 @@ const TeacherDashboard = () => {
       setUser(JSON.parse(storedUser));
     }
   }, []);
+
+  
 
   const [stats] = useState({
     totalResources: 28,
@@ -82,11 +85,40 @@ const TeacherDashboard = () => {
     }
   ];
 
-  const contentTypes = [
-    { name: 'Assignments', count: 45, color: 'text-blue-600', bg: 'bg-blue-100' },
-    { name: 'Flashcards', count: 78, color: 'text-green-600', bg: 'bg-green-100' },
-    { name: 'Summaries', count: 22, color: 'text-purple-600', bg: 'bg-purple-100' }
-  ];
+  const [contentCounts, setContentCounts] = useState({ assignments: 0, flashcards: 0, summaries: 0 });
+  
+    // Build content types for UI using fetched counts
+    const contentTypes = [
+      { name: 'Assignments', count: contentCounts.assignments || 0, color: 'text-blue-600', bg: 'bg-blue-100' },
+      { name: 'Flashcards', count: contentCounts.flashcards || 0, color: 'text-green-600', bg: 'bg-green-100' },
+      { name: 'Summaries', count: contentCounts.summaries || 0, color: 'text-purple-600', bg: 'bg-purple-100' }
+    ];
+  useEffect(() => {
+    const fetchContentCounts = async () => {
+      try {
+        const storedUser = localStorage.getItem('user');
+        const user = storedUser ? JSON.parse(storedUser) : null;
+        const teacherId = user?._id || localStorage.getItem('userId');
+        if (!teacherId) return;
+
+        const res = await axios.get(`http://localhost:5000/api/content/teacher/${teacherId}`);
+        const contents = (res.data && res.data.data) ? res.data.data : [];
+
+        const counts = contents.reduce((acc, content) => {
+          acc.assignments += Array.isArray(content.assignments) ? content.assignments.length : 0;
+          acc.flashcards += Array.isArray(content.flashcards) ? content.flashcards.length : 0;
+          acc.summaries += Array.isArray(content.summaries) ? content.summaries.length : 0;
+          return acc;
+        }, { assignments: 0, flashcards: 0, summaries: 0 });
+
+        setContentCounts(counts);
+      } catch (err) {
+        console.error('Error fetching teacher content counts:', err);
+      }
+    };
+
+    fetchContentCounts();
+  }, []);
 
   if (!user) return null; // prevent rendering before user is loaded
 
@@ -184,7 +216,7 @@ const TeacherDashboard = () => {
               </div>
               <h3 className="text-lg font-semibold text-gray-900 mb-1">{type.name}</h3>
               <p className="text-3xl font-bold text-gray-900 mb-2">{type.count}</p>
-              <p className="text-sm text-gray-600">Generated this month</p>
+              <p className="text-sm text-gray-600">Are Generated Till Now</p>
             </div>
           ))}
         </div>

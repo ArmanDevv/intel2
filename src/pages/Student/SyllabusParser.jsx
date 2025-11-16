@@ -8,6 +8,7 @@ import {
   CheckCircleIcon
 } from '@heroicons/react/outline';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
+import Notification from '../../components/UI/Notification';
 
 const SyllabusParser = () => {
   const [syllabusText, setSyllabusText] = useState('');
@@ -16,6 +17,7 @@ const SyllabusParser = () => {
   const [generatedPlaylists, setGeneratedPlaylists] = useState([]);
   const [currentStep, setCurrentStep] = useState(1);
   const [userId, setUserId] = useState('');
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     const storedUserId = localStorage.getItem('userId');
@@ -140,7 +142,8 @@ const SyllabusParser = () => {
         playlist: playlistToSave
       });
 
-      alert('Playlist saved successfully!');
+      setNotification({ type: 'success', title: 'Saved', message: 'Playlist saved successfully.' });
+      setTimeout(() => setNotification(null), 4500);
       // Reset the form
       setSyllabusText('');
       setExtractedTopics([]);
@@ -148,7 +151,8 @@ const SyllabusParser = () => {
       setCurrentStep(1);
     } catch (err) {
       console.error('Error saving playlist:', err);
-      alert('Failed to save playlist');
+      setNotification({ type: 'error', title: 'Save Failed', message: 'Failed to save playlist.' });
+      setTimeout(() => setNotification(null), 4500);
     }
   };
 
@@ -166,6 +170,15 @@ const SyllabusParser = () => {
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Syllabus Parser</h1>
         <p className="text-gray-600">Transform your syllabus into organized learning playlists</p>
       </div>
+
+      {notification && (
+        <Notification
+          type={notification.type}
+          title={notification.title}
+          message={notification.message}
+          onClose={() => setNotification(null)}
+        />
+      )}
 
       {/* Progress Steps */}
       <div className="card">

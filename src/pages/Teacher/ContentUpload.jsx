@@ -9,6 +9,7 @@ import {
 } from '@heroicons/react/outline';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
 import axios from 'axios';
+import Notification from '../../components/UI/Notification';
 
 const ContentUpload = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -19,6 +20,7 @@ const ContentUpload = () => {
   const [expandedAssignment, setExpandedAssignment] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
   const [uploadMetadata, setUploadMetadata] = useState({ fileName: '', fileType: '', modelUsed: '' });
+  const [notification, setNotification] = useState(null);
 
   // Function to download assignment as PDF/Text
   const downloadAssignment = (assignment, format = 'txt') => {
@@ -174,12 +176,10 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
     const response = await axios.post('http://localhost:5000/api/content/save', contentData);
 
     if (response.data.success) {
-      alert('Content saved successfully! This includes:\n\n' +
-            `✓ ${generatedContent.assignments?.length || 0} Assignments\n` +
-            `✓ ${generatedContent.flashcards?.length || 0} Flashcards\n` +
-            `✓ ${generatedContent.summaries?.length || 0} Summaries\n` +
-            `✓ ${generatedContent.matchedTopics?.length || 0} Topic Tags`);
-      
+      const msg = `Saved: ${generatedContent.assignments?.length || 0} Assignments, ${generatedContent.flashcards?.length || 0} Flashcards, ${generatedContent.summaries?.length || 0} Summaries`;
+      setNotification({ type: 'success', title: 'Content Saved', message: msg });
+      setTimeout(() => setNotification(null), 5000);
+
       // Reset form
       setCurrentStep(1);
       setUploadedFiles([]);
@@ -191,7 +191,8 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
   } catch (err) {
     console.error('Save error:', err);
     setError(err.response?.data?.error || err.message || 'Failed to save content');
-    alert('Failed to save content: ' + (err.response?.data?.error || err.message));
+    setNotification({ type: 'error', title: 'Save Failed', message: err.response?.data?.error || err.message || 'Failed to save content' });
+    setTimeout(() => setNotification(null), 5000);
   } finally {
     setIsSaving(false);
   }
@@ -206,6 +207,14 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
         <p className="text-gray-600">Upload educational materials and let AI generate learning content</p>
       </div>
 
+      {notification && (
+        <Notification
+          type={notification.type}
+          title={notification.title}
+          message={notification.message}
+          onClose={() => setNotification(null)}
+        />
+      )}
       {/* Error Display */}
       {error && (
         <div className="card bg-red-50 border-red-200">
