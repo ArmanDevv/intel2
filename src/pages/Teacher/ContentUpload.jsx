@@ -241,9 +241,6 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
                 <p className="text-gray-600 mb-4">
                   Support for PDF, DOCX, and image files (JPG, PNG)
                 </p>
-                <button className="btn-primary">
-                  Choose Files
-                </button>
               </label>
             </div>
           </div>

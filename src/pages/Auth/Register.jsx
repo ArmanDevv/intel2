@@ -30,12 +30,11 @@ const Register = () => {
       });
 
       if (res.data && res.data.user) {
-        localStorage.setItem("userId", res.data.user._id); // Store user ID
-        // Optionally store JWT or user object as well
-        // localStorage.setItem('token', response.data.token);
-        navigate("/dashboard"); // or wherever you want to redirect
+        localStorage.setItem("user", JSON.stringify(res.data.user));
+        localStorage.setItem("userId", res.data.user._id || res.data.user.id); // Store user ID
+        navigate("/"); // Redirect to home/dashboard
       } else {
-        // handle registration error
+        setError("Registration failed. Please try again.");
       }
     } catch (err) {
       if (err.response && err.response.status === 400) {

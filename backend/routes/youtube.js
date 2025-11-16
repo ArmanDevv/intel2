@@ -75,4 +75,73 @@ router.post('/save-playlist', async (req, res) => {
   }
 });
 
+// Get all playlists for a user
+router.get('/get-playlists/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ error: 'Invalid userId' });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    res.json({ playlists: user.playlists });
+  } catch (err) {
+    console.error('Get playlists error:', err);
+    res.status(500).json({ error: 'Failed to fetch playlists' });
+  }
+});
+
+// Delete a playlist
+router.delete('/delete-playlist/:userId/:playlistId', async (req, res) => {
+  const { userId, playlistId } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ error: 'Invalid userId' });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    user.playlists = user.playlists.filter(p => p._id.toString() !== playlistId);
+    await user.save();
+
+    res.json({ success: true, playlists: user.playlists });
+  } catch (err) {
+    console.error('Delete playlist error:', err);
+    res.status(500).json({ error: 'Failed to delete playlist' });
+  }
+});
+
+// Update a playlist
+router.put('/update-playlist/:userId/:playlistId', async (req, res) => {
+  const { userId, playlistId } = req.params;
+  const { title, isBookmarked } = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return res.status(400).json({ error: 'Invalid userId' });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const playlistIndex = user.playlists.findIndex(p => p._id.toString() === playlistId);
+    if (playlistIndex === -1) return res.status(404).json({ error: 'Playlist not found' });
+
+    if (title) user.playlists[playlistIndex].title = title;
+    if (typeof isBookmarked === 'boolean') user.playlists[playlistIndex].isBookmarked = isBookmarked;
+
+    await user.save();
+
+    res.json({ success: true, playlists: user.playlists });
+  } catch (err) {
+    console.error('Update playlist error:', err);
+    res.status(500).json({ error: 'Failed to update playlist' });
+  }
+});
+
 module.exports = router;

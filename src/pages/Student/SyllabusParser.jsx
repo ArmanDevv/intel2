@@ -109,12 +109,45 @@ const SyllabusParser = () => {
       return;
     }
     try {
+      // determine a new sequential title like Playlist-1, Playlist-2, ...
+      let nextIndex = 1;
+      try {
+        const existingRes = await axios.get(`http://localhost:5000/api/youtube/get-playlists/${userId}`);
+        const existing = existingRes.data.playlists || [];
+        nextIndex = existing.length + 1;
+      } catch (err) {
+        console.warn('Could not fetch existing playlists to compute name, defaulting to 1', err);
+      }
+
+      const playlistToSave = {
+        title: `Playlist-${nextIndex}`,
+        description: 'Generated from syllabus parser',
+        videoCount: playlist.videoCount,
+        videos: playlist.videos,
+        topics: extractedTopics,
+        // keep totalDuration optional — not relied upon currently
+        totalDuration: playlist.totalDuration || null,
+        progress: 0,
+        isBookmarked: false,
+        createdAt: new Date().toISOString(),
+        thumbnail: playlist.videos.length > 0 && playlist.videos[0].thumbnail 
+          ? playlist.videos[0].thumbnail 
+          : 'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=400'
+      };
+
       await axios.post('http://localhost:5000/api/youtube/save-playlist', {
         userId,
-        playlist
+        playlist: playlistToSave
       });
-      alert('Playlist saved!');
+
+      alert('Playlist saved successfully!');
+      // Reset the form
+      setSyllabusText('');
+      setExtractedTopics([]);
+      setGeneratedPlaylists([]);
+      setCurrentStep(1);
     } catch (err) {
+      console.error('Error saving playlist:', err);
       alert('Failed to save playlist');
     }
   };
@@ -183,16 +216,7 @@ const SyllabusParser = () => {
             </div>
             
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <button
-                  type="button"
-                  className="btn-secondary flex items-center"
-                >
-                  <UploadIcon className="h-5 w-5 mr-2" />
-                  Upload File
-                </button>
-                <span className="text-sm text-gray-500">or paste text directly</span>
-              </div>
+              
               
               <button
                 type="submit"

@@ -18,12 +18,12 @@ const Header = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center flex-1 max-w-lg">
           <div className="relative w-full">
-            <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
+            {/* <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
             <input
               type="text"
               placeholder="Search resources, playlists, or topics..."
               className="input-field pl-10"
-            />
+            /> */}
           </div>
         </div>
         

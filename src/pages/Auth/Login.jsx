@@ -27,6 +27,7 @@ const Login = () => {
 
       // Save logged-in user in localStorage
       localStorage.setItem("user", JSON.stringify(res.data));
+      localStorage.setItem("userId", res.data._id || res.data.id); // Store userId for API calls
 
       // Redirect based on role
       if (res.data.role === "student") navigate("/");

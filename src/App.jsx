@@ -8,6 +8,7 @@ import StudentDashboard from './pages/Student/StudentDashboard';
 import TeacherDashboard from './pages/Teacher/TeacherDashboard';
 import SyllabusParser from './pages/Student/SyllabusParser';
 import PlaylistManager from './pages/Student/PlaylistManager';
+import PlaylistDetail from './pages/Student/PlaylistDetail';
 import ContentUpload from './pages/Teacher/ContentUpload';
 // import ResourceManager from './pages/Teacher/ResourceManager';
 import MyContent from './pages/Teacher/MyContent';
@@ -48,6 +49,18 @@ function AppRoutes() {
       <Route path="/playlists" element={
         <ProtectedRoute allowedRoles={['student']}>
           <Layout><PlaylistManager /></Layout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/student/playlist-manager" element={
+        <ProtectedRoute allowedRoles={['student']}>
+          <Layout><PlaylistManager /></Layout>
+        </ProtectedRoute>
+      } />
+
+      <Route path="/student/playlist/:playlistId" element={
+        <ProtectedRoute allowedRoles={['student']}>
+          <Layout><PlaylistDetail /></Layout>
         </ProtectedRoute>
       } />
 

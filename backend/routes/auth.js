@@ -16,7 +16,16 @@ router.post("/register", async (req, res) => {
     const user = new User({ fullName, email, password: hashedPassword, role });
     await user.save();
 
-    res.status(201).json({ message: "User registered successfully" });
+    res.status(201).json({ 
+      message: "User registered successfully",
+      user: {
+        _id: user._id,
+        id: user._id.toString(),
+        name: user.fullName,
+        email: user.email,
+        role: user.role
+      }
+    });
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
