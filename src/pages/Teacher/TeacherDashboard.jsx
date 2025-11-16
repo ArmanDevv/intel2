@@ -68,14 +68,14 @@ const TeacherDashboard = () => {
   const quickActions = [
     {
       title: 'Upload New Content',
-      description: 'Upload PDF, DOCX, or image files to generate learning materials',
+      description: 'Upload PDF or DOCX files to generate learning materials',
       icon: CloudUploadIcon,
       link: '/upload',
       color: 'bg-purple-500'
     },
     {
       title: 'Manage Resources',
-      description: 'View and edit your uploaded content and generated materials',
+      description: 'View and edit your generated materials',
       icon: DocumentIcon,
       link: '/resources',
       color: 'bg-blue-500'
@@ -99,7 +99,7 @@ const TeacherDashboard = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="card">
           <div className="flex items-center">
             <div className="p-3 bg-blue-100 rounded-xl">
@@ -147,7 +147,7 @@ const TeacherDashboard = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Quick Actions */}
       <div>
@@ -191,7 +191,7 @@ const TeacherDashboard = () => {
       </div>
 
       {/* Recent Uploads */}
-      <div>
+      {/* <div>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-gray-900">Recent Uploads</h2>
           <Link to="/resources" className="text-primary-500 hover:text-primary-600 font-medium">
@@ -234,7 +234,7 @@ const TeacherDashboard = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

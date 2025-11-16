@@ -164,14 +164,14 @@ const PlaylistManager = () => {
                 {/* Thumbnail */}
                 <div className="relative aspect-video bg-gray-200 rounded-xl mb-4 overflow-hidden">
                   <img
-                    src={playlist.thumbnail || 'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=400'}
+                    src={playlist.thumbnail || 'https://images.pexels.com/photos/733852/pexels-photo-733852.jpeg?auto=compress&cs=tinysrgb&w=400'}
                     alt={playlist.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                    <button className="bg-white bg-opacity-90 rounded-full p-3 hover:bg-opacity-100 transition-all">
+                    {/* <button className="bg-white bg-opacity-90 rounded-full p-3 hover:bg-opacity-100 transition-all">
                       <PlayIcon className="h-6 w-6 text-gray-900" />
-                    </button>
+                    </button> */}
                   </div>
                   
                   {/* Actions */}

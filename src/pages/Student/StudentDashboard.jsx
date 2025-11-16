@@ -21,9 +21,7 @@ const StudentDashboard = () => {
 
   const [stats, setStats] = useState({
     totalPlaylists: 12,
-    totalVideos: 147,
-    totalBookmarks: 23,
-    studyHours: 34
+    totalVideos: 147
   });
 
   const recentPlaylists = [
@@ -81,7 +79,7 @@ const StudentDashboard = () => {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
         <div className="card">
           <div className="flex items-center">
             <div className="p-3 bg-blue-100 rounded-xl">
@@ -100,13 +98,13 @@ const StudentDashboard = () => {
               <PlayIcon className="h-6 w-6 text-green-600" />
             </div>
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Videos Watched</p>
+              <p className="text-sm font-medium text-gray-600">Total videos</p>
               <p className="text-2xl font-bold text-gray-900">{stats.totalVideos}</p>
             </div>
           </div>
         </div>
 
-        <div className="card">
+        {/* <div className="card">
           <div className="flex items-center">
             <div className="p-3 bg-yellow-100 rounded-xl">
               <BookmarkIcon className="h-6 w-6 text-yellow-600" />
@@ -128,7 +126,7 @@ const StudentDashboard = () => {
               <p className="text-2xl font-bold text-gray-900">{stats.studyHours}</p>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
 
       {/* Quick Actions */}
@@ -156,7 +154,7 @@ const StudentDashboard = () => {
       </div>
 
       {/* Recent Playlists */}
-      <div>
+      {/* <div>
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-semibold text-gray-900">Recent Playlists</h2>
           <Link to="/playlists" className="text-primary-500 hover:text-primary-600 font-medium">
@@ -191,7 +189,7 @@ const StudentDashboard = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -28,10 +28,10 @@ const Header = () => {
         </div>
         
         <div className="flex items-center space-x-4">
-          <button className="relative p-2 text-gray-600 hover:text-gray-900 transition-colors">
+          {/* <button className="relative p-2 text-gray-600 hover:text-gray-900 transition-colors">
             <BellIcon className="h-6 w-6" />
             <span className="absolute top-1 right-1 h-2 w-2 bg-red-500 rounded-full"></span>
-          </button>
+          </button> */}
           
           <div className="relative">
             <button
