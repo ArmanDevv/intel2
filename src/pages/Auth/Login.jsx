@@ -1,5 +1,5 @@
 // Login.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
@@ -27,7 +27,7 @@ const Login = () => {
 
       // Save logged-in user in localStorage
       localStorage.setItem("user", JSON.stringify(res.data));
-      localStorage.setItem("userId", res.data._id || res.data.id); // Store userId for API calls
+      localStorage.setItem("userId", res.data._id || res.data.id);
 
       // Redirect based on role
       if (res.data.role === "student") navigate("/");

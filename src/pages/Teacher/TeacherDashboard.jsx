@@ -130,57 +130,6 @@ const TeacherDashboard = () => {
         <p className="text-purple-100 text-lg">Ready to create amazing learning experiences?</p>
       </div>
 
-      {/* Stats Grid */}
-      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="card">
-          <div className="flex items-center">
-            <div className="p-3 bg-blue-100 rounded-xl">
-              <DocumentIcon className="h-6 w-6 text-blue-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Total Resources</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.totalResources}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="card">
-          <div className="flex items-center">
-            <div className="p-3 bg-purple-100 rounded-xl">
-              <SparklesIcon className="h-6 w-6 text-purple-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Generated Content</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.generatedContent}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="card">
-          <div className="flex items-center">
-            <div className="p-3 bg-green-100 rounded-xl">
-              <UsersIcon className="h-6 w-6 text-green-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Active Students</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.activeStudents}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="card">
-          <div className="flex items-center">
-            <div className="p-3 bg-orange-100 rounded-xl">
-              <ClockIcon className="h-6 w-6 text-orange-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Teaching Hours</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.teachingHours}</p>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
       {/* Quick Actions */}
       <div>
         <h2 className="text-xl font-semibold text-gray-900 mb-6">Quick Actions</h2>
@@ -221,52 +170,6 @@ const TeacherDashboard = () => {
           ))}
         </div>
       </div>
-
-      {/* Recent Uploads */}
-      {/* <div>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-gray-900">Recent Uploads</h2>
-          <Link to="/resources" className="text-primary-500 hover:text-primary-600 font-medium">
-            View All
-          </Link>
-        </div>
-        <div className="space-y-4">
-          {recentUploads.map((upload) => (
-            <div key={upload.id} className="card">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center flex-1">
-                  <div className="p-3 bg-gray-100 rounded-xl mr-4">
-                    <DocumentIcon className="h-6 w-6 text-gray-600" />
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-semibold text-gray-900">{upload.title}</h3>
-                    <p className="text-sm text-gray-600">{upload.type} • {upload.uploadDate}</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-center space-x-6 text-sm">
-                  <div className="text-center">
-                    <p className="font-semibold text-gray-900">{upload.generatedContent.assignments}</p>
-                    <p className="text-gray-500">Assignments</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-semibold text-gray-900">{upload.generatedContent.flashcards}</p>
-                    <p className="text-gray-500">Flashcards</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-semibold text-gray-900">{upload.generatedContent.summaries}</p>
-                    <p className="text-gray-500">Summaries</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="font-semibold text-primary-600">{upload.matchedTopics}</p>
-                    <p className="text-gray-500">Matched Topics</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div> */}
     </div>
   );
 };

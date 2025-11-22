@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   HomeIcon,
@@ -70,7 +70,7 @@ const Sidebar = () => {
         <div className="flex items-center space-x-3 p-3 bg-gray-50 rounded-xl">
           <div className="h-10 w-10 bg-gradient-to-br from-primary-500 to-primary-600 rounded-lg flex items-center justify-center">
             <span className="text-white font-medium text-sm">
-              {user?.name?.split(' ').map(n => n[0]).join('') || 'U'}
+              {user?.name?.charAt(0) || 'U'}
             </span>
           </div>
           <div className="flex-1 min-w-0">

@@ -4,10 +4,7 @@ import axios from 'axios';
 import {
   DocumentTextIcon,
   CollectionIcon,
-  BookmarkIcon,
   PlayIcon,
-  TrendingUpIcon,
-  ClockIcon
 } from '@heroicons/react/outline';
 
 const StudentDashboard = () => {
@@ -129,30 +126,6 @@ const StudentDashboard = () => {
             </div>
           </div>
         </div>
-
-        {/* <div className="card">
-          <div className="flex items-center">
-            <div className="p-3 bg-yellow-100 rounded-xl">
-              <BookmarkIcon className="h-6 w-6 text-yellow-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Bookmarks</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.totalBookmarks}</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="card">
-          <div className="flex items-center">
-            <div className="p-3 bg-purple-100 rounded-xl">
-              <ClockIcon className="h-6 w-6 text-purple-600" />
-            </div>
-            <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Study Hours</p>
-              <p className="text-2xl font-bold text-gray-900">{stats.studyHours}</p>
-            </div>
-          </div>
-        </div> */}
       </div>
 
       {/* Quick Actions */}
@@ -178,44 +151,7 @@ const StudentDashboard = () => {
           ))}
         </div>
       </div>
-
-      {/* Recent Playlists */}
-      {/* <div>
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-semibold text-gray-900">Recent Playlists</h2>
-          <Link to="/playlists" className="text-primary-500 hover:text-primary-600 font-medium">
-            View All
-          </Link>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {recentPlaylists.map((playlist) => (
-            <div key={playlist.id} className="card group cursor-pointer">
-              <div className="aspect-video bg-gray-200 rounded-xl mb-4 overflow-hidden">
-                <img
-                  src={playlist.thumbnail}
-                  alt={playlist.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
-                />
-              </div>
-              <h3 className="font-semibold text-gray-900 mb-2">{playlist.title}</h3>
-              <p className="text-sm text-gray-600 mb-3">{playlist.videoCount} videos</p>
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Progress</span>
-                  <span className="font-medium">{playlist.progress}%</span>
-                </div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className="bg-primary-500 h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${playlist.progress}%` }}
-                  ></div>
-                </div>
-                <p className="text-xs text-gray-500">Last watched {playlist.lastWatched}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div> */}
+     
     </div>
   );
 };

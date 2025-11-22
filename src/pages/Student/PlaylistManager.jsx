@@ -128,34 +128,6 @@ const PlaylistManager = () => {
         </div>
       ) : (
         <>
-          {/* Search and Filter Bar */}
-          {/* <div className="card">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <div className="flex-1 relative">
-                <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-                <input
-                  type="text"
-                  placeholder="Search playlists or topics..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="input-field pl-10"
-                />
-              </div>
-              <div className="flex items-center space-x-3">
-                <FilterIcon className="h-5 w-5 text-gray-400" />
-                <select
-                  value={selectedFilter}
-                  onChange={(e) => setSelectedFilter(e.target.value)}
-                  className="input-field w-auto"
-                >
-                  <option value="all">All Playlists</option>
-                  <option value="bookmarked">Bookmarked</option>
-                  <option value="completed">Completed</option>
-                  <option value="in-progress">In Progress</option>
-                </select>
-              </div>
-            </div>
-          </div> */}
 
           {/* Playlists Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -169,9 +141,7 @@ const PlaylistManager = () => {
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                   />
                   <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                    {/* <button className="bg-white bg-opacity-90 rounded-full p-3 hover:bg-opacity-100 transition-all">
-                      <PlayIcon className="h-6 w-6 text-gray-900" />
-                    </button> */}
+                    
                   </div>
                   
                   {/* Actions */}
@@ -217,7 +187,6 @@ const PlaylistManager = () => {
                   {/* Stats */}
                   <div className="flex items-center justify-between text-sm text-gray-600">
                     <span>{playlist.videoCount || 0} videos</span>
-                    {/* <span>{playlist.totalDuration || '0h 0m'}</span> */}
                   </div>
 
                   {/* Action Buttons */}

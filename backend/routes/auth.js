@@ -1,7 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User.js");
-
 const router = express.Router();
 
 // Register
@@ -32,13 +31,10 @@ router.post("/register", async (req, res) => {
 });
 
 // Login
-// Login
-// Login
 router.post("/login", async (req, res) => {
   try {
     const { email, password, role } = req.body;
 
-    // Find user by email AND role
     const user = await User.findOne({ email, role });
     if (!user) 
       return res.status(400).json({ message: "User not registered with this role, please register or check credentials" });
@@ -47,10 +43,9 @@ router.post("/login", async (req, res) => {
     if (!isMatch) 
       return res.status(400).json({ message: "Incorrect password, please try again" });
 
-    // ✅ FIXED: Now returning _id along with other user data
     res.json({ 
-      _id: user._id,           // MongoDB's default ID field
-      id: user._id.toString(), // Alternative string format
+      _id: user._id,           
+      id: user._id.toString(),
       name: user.fullName, 
       email: user.email,
       role: user.role 

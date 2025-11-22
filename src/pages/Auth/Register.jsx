@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import LoadingSpinner from "../../components/UI/LoadingSpinner";
@@ -31,7 +31,7 @@ const Register = () => {
 
       if (res.data && res.data.user) {
         localStorage.setItem("user", JSON.stringify(res.data.user));
-        localStorage.setItem("userId", res.data.user._id || res.data.user.id); // Store user ID
+        localStorage.setItem("userId", res.data.user._id || res.data.user.id);
         navigate("/"); // Redirect to home/dashboard
       } else {
         setError("Registration failed. Please try again.");

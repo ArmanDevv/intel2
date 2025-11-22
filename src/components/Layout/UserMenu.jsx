@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import { LogoutIcon, CogIcon, UserIcon } from '@heroicons/react/outline';
+import { useRef, useEffect } from 'react';
+import { LogoutIcon } from '@heroicons/react/outline';
 
 const UserMenu = ({ onClose }) => {
   const menuRef = useRef();
