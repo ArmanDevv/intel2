@@ -4,7 +4,7 @@ IntelliClass is an AI-powered Learning Management platform designed to reduce ma
 
 ---
 
-## 🚀 Project Overview
+## Project Overview
 
 IntelliClass leverages modern AI tools to:
 
@@ -22,7 +22,7 @@ Built using:
 
 ---
 
-## 📂 Features
+## Features
 
 * PDF parsing and AI-generated study resources.
 * Automated assignment and flashcard creation.
@@ -32,7 +32,7 @@ Built using:
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 * **Frontend**: React.js, Tailwind CSS
 * **Backend**: Express.js, Node.js
@@ -41,7 +41,7 @@ Built using:
 
 ---
 
-## 📘 How It Works
+## How It Works
 
 1. The teacher uploads a PDF.
 2. The backend extracts text and sends it to Gemini API.
@@ -56,7 +56,7 @@ Built using:
 
 ---
 
-## 🎯 Parsing Demo — Example Syllabus (Comma-Separated)
+## Parsing Demo — Example Syllabus (Comma-Separated)
 
 Below is a sample syllabus used for **testing YouTube parser functionality** in IntelliClass. This is included as demonstration content.
 
@@ -78,7 +78,7 @@ Types of Operating Systems, Process, Process States, Process Control Block, Thre
 
 ---
 
-## 📌 Installation
+## Installation
 
 ```bash
 git clone https://github.com/ArmanDevv/intel2.git
