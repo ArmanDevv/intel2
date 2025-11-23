@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
   DocumentTextIcon,
-  UploadIcon,
   SparklesIcon,
   PlayIcon,
   CheckCircleIcon
@@ -97,7 +96,7 @@ const SyllabusParser = () => {
           id: 1,
           title: "Best Playlist for Your Syllabus",
           videoCount: 0,
-          videos: [],
+          videos: [], //this part will have the generated videos links 
         }
       ]);
     }
@@ -111,7 +110,7 @@ const SyllabusParser = () => {
       return;
     }
     try {
-      // determine a new sequential title like Playlist-1, Playlist-2, ...
+      // determine a new sequential title like Playlist-1, Playlist-2, and so on.
       let nextIndex = 1;
       try {
         const existingRes = await axios.get(`http://localhost:5000/api/youtube/get-playlists/${userId}`);
@@ -127,10 +126,9 @@ const SyllabusParser = () => {
         videoCount: playlist.videoCount,
         videos: playlist.videos,
         topics: extractedTopics,
-        // keep totalDuration optional — not relied upon currently
-        totalDuration: playlist.totalDuration || null,
-        progress: 0,
-        isBookmarked: false,
+        totalDuration: playlist.totalDuration || null, //future scope
+        progress: 0, //future scope
+        isBookmarked: false, //future scope
         createdAt: new Date().toISOString(),
         thumbnail: playlist.videos.length > 0 && playlist.videos[0].thumbnail 
           ? playlist.videos[0].thumbnail 

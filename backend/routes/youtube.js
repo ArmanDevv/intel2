@@ -20,11 +20,11 @@ router.post('/search', async (req, res) => {
   for (const topic of topics) {
     let foundVideo = null;
     const params = {
-      part: 'snippet',
+      part: 'snippet', //video ka title description channel name dega
       q: `${topic} ${branch}`,
       type: 'video',
       maxResults,
-      order: 'viewCount',
+      order: 'viewCount', //other options - date, rating, alphabetic order(title), relevance
       key: YOUTUBE_API_KEY,
     };
     try {

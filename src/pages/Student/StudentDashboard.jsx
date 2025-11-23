@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import {
@@ -33,7 +33,6 @@ const StudentDashboard = () => {
 
         const totalPlaylists = playlists.length;
         const totalVideos = playlists.reduce((acc, p) => {
-          // Prefer explicit videoCount, otherwise count videos array
           const count = typeof p.videoCount === 'number' ? p.videoCount : (p.videos ? p.videos.length : 0);
           return acc + count;
         }, 0);
@@ -47,32 +46,32 @@ const StudentDashboard = () => {
     fetchStats();
   }, []);
 
-  const recentPlaylists = [
-    {
-      id: 1,
-      title: 'Introduction to Machine Learning',
-      videoCount: 15,
-      progress: 68,
-      lastWatched: '2 hours ago',
-      thumbnail: 'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=400'
-    },
-    {
-      id: 2,
-      title: 'React.js Fundamentals',
-      videoCount: 12,
-      progress: 85,
-      lastWatched: '1 day ago',
-      thumbnail: 'https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg?auto=compress&cs=tinysrgb&w=400'
-    },
-    {
-      id: 3,
-      title: 'Data Structures & Algorithms',
-      videoCount: 23,
-      progress: 45,
-      lastWatched: '3 days ago',
-      thumbnail: 'https://images.pexels.com/photos/1181298/pexels-photo-1181298.jpeg?auto=compress&cs=tinysrgb&w=400'
-    }
-  ];
+  // const recentPlaylists = [
+  //   {
+  //     id: 1,
+  //     title: 'Introduction to Machine Learning',
+  //     videoCount: 15,
+  //     progress: 68,
+  //     lastWatched: '2 hours ago',
+  //     thumbnail: 'https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=400'
+  //   },
+  //   {
+  //     id: 2,
+  //     title: 'React.js Fundamentals',
+  //     videoCount: 12,
+  //     progress: 85,
+  //     lastWatched: '1 day ago',
+  //     thumbnail: 'https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg?auto=compress&cs=tinysrgb&w=400'
+  //   },
+  //   {
+  //     id: 3,
+  //     title: 'Data Structures & Algorithms',
+  //     videoCount: 23,
+  //     progress: 45,
+  //     lastWatched: '3 days ago',
+  //     thumbnail: 'https://images.pexels.com/photos/1181298/pexels-photo-1181298.jpeg?auto=compress&cs=tinysrgb&w=400'
+  //   }
+  // ];
 
   const quickActions = [
     {
@@ -91,7 +90,7 @@ const StudentDashboard = () => {
     }
   ];
 
-  if (!user) return null; // prevent rendering before user is loaded
+  if (!user) return null;
 
   return (
     <div className="space-y-8">
