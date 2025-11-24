@@ -3,13 +3,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import {
   CollectionIcon,
-  BookmarkIcon,
   TrashIcon,
   PencilIcon,
-  PlayIcon,
-  DotsVerticalIcon,
-  SearchIcon,
-  FilterIcon
+  PlayIcon
 } from '@heroicons/react/outline';
 import Modal from '../../components/UI/Modal';
 import LoadingSpinner from '../../components/UI/LoadingSpinner';
@@ -20,8 +16,6 @@ const PlaylistManager = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = useState('');
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedFilter, setSelectedFilter] = useState('all');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showRenameModal, setShowRenameModal] = useState(false);
   const [selectedPlaylist, setSelectedPlaylist] = useState(null);
@@ -47,22 +41,6 @@ const PlaylistManager = () => {
 
     fetchPlaylists();
   }, []);
-
-  const filteredPlaylists = playlists.filter(playlist => {
-    const matchesSearch = playlist.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         playlist.topics.some(topic => topic.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    switch (selectedFilter) {
-      case 'bookmarked':
-        return matchesSearch && playlist.isBookmarked;
-      case 'completed':
-        return matchesSearch && playlist.progress === 100;
-      case 'in-progress':
-        return matchesSearch && playlist.progress > 0 && playlist.progress < 100;
-      default:
-        return matchesSearch;
-    }
-  });
 
   const handleDeletePlaylist = async () => {
     try {
@@ -93,20 +71,6 @@ const PlaylistManager = () => {
     }
   };
 
-  const toggleBookmark = async (playlistId) => {
-    const playlist = playlists.find(p => p._id === playlistId);
-    try {
-      await axios.put(`http://localhost:5000/api/youtube/update-playlist/${userId}/${playlistId}`, {
-        isBookmarked: !playlist.isBookmarked
-      });
-      setPlaylists(prev => prev.map(p => 
-        p._id === playlistId ? { ...p, isBookmarked: !p.isBookmarked } : p
-      ));
-    } catch (err) {
-      console.error('Error toggling bookmark:', err);
-    }
-  };
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -128,10 +92,9 @@ const PlaylistManager = () => {
         </div>
       ) : (
         <>
-
           {/* Playlists Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-            {filteredPlaylists.map((playlist) => (
+            {playlists.map((playlist) => (
               <div key={playlist._id} className="card group hover:scale-105 transition-all duration-200">
                 {/* Thumbnail */}
                 <div className="relative aspect-video bg-gray-200 rounded-xl mb-4 overflow-hidden">
@@ -140,30 +103,6 @@ const PlaylistManager = () => {
                     alt={playlist.title}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-200"
                   />
-                  <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center">
-                    
-                  </div>
-                  
-                  {/* Actions */}
-                  <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={() => toggleBookmark(playlist._id)}
-                        className={`p-2 rounded-lg backdrop-blur-sm ${
-                          playlist.isBookmarked
-                            ? 'bg-yellow-500 text-white'
-                            : 'bg-white bg-opacity-80 text-gray-700 hover:bg-opacity-100'
-                        } transition-all`}
-                      >
-                        <BookmarkIcon className="h-4 w-4" />
-                      </button>
-                      <div className="relative">
-                        <button className="p-2 rounded-lg bg-white bg-opacity-80 text-gray-700 hover:bg-opacity-100 transition-all">
-                          <DotsVerticalIcon className="h-4 w-4" />
-                        </button>
-                      </div>
-                    </div>
-                  </div>
                 </div>
 
                 {/* Content */}
@@ -226,12 +165,12 @@ const PlaylistManager = () => {
           </div>
 
           {/* Empty State */}
-          {filteredPlaylists.length === 0 && (
+          {playlists.length === 0 && (
             <div className="text-center py-12">
               <CollectionIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-semibold text-gray-900 mb-2">No playlists found</h3>
               <p className="text-gray-600 mb-4">
-                {searchTerm ? 'Try adjusting your search or filter criteria.' : 'Create your first playlist by parsing a syllabus.'}
+                Create your first playlist by parsing a syllabus.
               </p>
             </div>
           )}

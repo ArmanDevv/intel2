@@ -4,7 +4,6 @@ import axios from 'axios';
 import {
   ArrowLeftIcon,
   PlayIcon,
-  BookmarkIcon,
   TrashIcon,
   ExternalLinkIcon
 } from '@heroicons/react/outline';
@@ -51,17 +50,6 @@ const PlaylistDetail = () => {
     }
   };
 
-  const toggleBookmark = async () => {
-    try {
-      await axios.put(`http://localhost:5000/api/youtube/update-playlist/${userId}/${playlistId}`, {
-        isBookmarked: !playlist.isBookmarked
-      });
-      setPlaylist({ ...playlist, isBookmarked: !playlist.isBookmarked });
-    } catch (err) {
-      console.error('Error updating bookmark:', err);
-    }
-  };
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -101,16 +89,6 @@ const PlaylistDetail = () => {
           </div>
         </div>
         <div className="flex space-x-2">
-          <button
-            onClick={toggleBookmark}
-            className={`p-3 rounded-lg transition-all ${
-              playlist.isBookmarked
-                ? 'bg-yellow-100 text-yellow-600'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-            }`}
-          >
-            <BookmarkIcon className="h-5 w-5" />
-          </button>
           <button
             onClick={handleDelete}
             className="p-3 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition-colors"

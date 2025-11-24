@@ -1,8 +1,8 @@
-const express = require('express');
-const axios = require('axios');
-const router = express.Router();
+const express = require('express'); //framework used to handle the backend routes
+const axios = require('axios'); //used to handle http req and res
+const router = express.Router(); //used to create router end points
 const User = require('../models/User');
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); //ODM of mongodb (object document mapping)
 
 const YOUTUBE_API_KEY = process.env.YOUTUBE_API_KEY;
 
@@ -119,7 +119,8 @@ router.delete('/delete-playlist/:userId/:playlistId', async (req, res) => {
 // Update a playlist
 router.put('/update-playlist/:userId/:playlistId', async (req, res) => {
   const { userId, playlistId } = req.params;
-  const { title, isBookmarked } = req.body;
+  // const { title, isBookmarked } = req.body;
+  const {title} = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(userId)) {
     return res.status(400).json({ error: 'Invalid userId' });
@@ -133,7 +134,7 @@ router.put('/update-playlist/:userId/:playlistId', async (req, res) => {
     if (playlistIndex === -1) return res.status(404).json({ error: 'Playlist not found' });
 
     if (title) user.playlists[playlistIndex].title = title;
-    if (typeof isBookmarked === 'boolean') user.playlists[playlistIndex].isBookmarked = isBookmarked;
+    // if (typeof isBookmarked === 'boolean') user.playlists[playlistIndex].isBookmarked = isBookmarked;
 
     await user.save();
 
