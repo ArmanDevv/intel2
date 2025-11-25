@@ -1,4 +1,4 @@
-// routes/content.js
+// 
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
@@ -7,7 +7,7 @@ const path = require('path');
 const axios = require('axios');
 const Content = require('../models/Content');
 
-// Configure multer for file uploads
+
 const storage = multer.diskStorage({
   destination: async (req, file, cb) => {
     const uploadDir = path.join(__dirname, '../uploads');
@@ -27,7 +27,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   limits: {
-    fileSize: 50 * 1024 * 1024 // 50MB limit
+    fileSize: 50 * 1024 * 1024 
   },
   fileFilter: (req, file, cb) => {
     const allowedTypes = /pdf|doc|docx|jpeg|jpg|png/;
@@ -42,13 +42,13 @@ const upload = multer({
   }
 });
 
-// Helper function to convert file to base64
+
 async function fileToBase64(filePath) {
   const fileData = await fs.readFile(filePath);
   return fileData.toString('base64');
 }
 
-// POST: Upload files
+
 router.post('/upload', upload.array('files', 10), async (req, res) => {
   try {
     if (!req.files || req.files.length === 0) {
@@ -76,7 +76,7 @@ router.post('/upload', upload.array('files', 10), async (req, res) => {
   }
 });
 
-// POST: Process files with Gemini AI using direct API
+
 router.post('/process', async (req, res) => {
   try {
     const { files } = req.body;
@@ -85,19 +85,19 @@ router.post('/process', async (req, res) => {
       return res.status(400).json({ error: 'No files to process' });
     }
 
-    // List of FREE model endpoints to try (no billing required)
+    
     const modelsToTry = [
-      { name: 'gemini-2.5-flash', version: 'v1beta' },        // ⭐ Best free option
-      { name: 'gemini-2.0-flash', version: 'v1beta' },        // Fast & free
-      { name: 'gemini-flash-latest', version: 'v1beta' },     // Always points to latest free flash
-      { name: 'gemini-2.5-flash-lite', version: 'v1beta' },   // Lighter version
-      { name: 'gemini-2.0-flash-lite', version: 'v1beta' }    // Even lighter
+      { name: 'gemini-2.5-flash', version: 'v1beta' },        
+      { name: 'gemini-2.0-flash', version: 'v1beta' },        
+      { name: 'gemini-flash-latest', version: 'v1beta' },     
+      { name: 'gemini-2.5-flash-lite', version: 'v1beta' },   
+      { name: 'gemini-2.0-flash-lite', version: 'v1beta' }    
     ];
 
     let responseData;
     let modelUsed;
 
-    // Prepare file parts
+    
     const fileParts = await Promise.all(
       files.map(async file => {
         const base64Data = await fileToBase64(file.path);
@@ -181,13 +181,13 @@ RULES:
 - Base all content on the uploaded material`;
 
 
-    // Try each model until one works
+    
     for (const model of modelsToTry) {
       try {
         console.log(`Trying model: ${model.name} with API version ${model.version}`);
         
         const url = `https://generativelanguage.googleapis.com/${model.version}/models/${model.name}:generateContent?key=${process.env.GEMINI_API_KEY}`;
-        
+      
         const requestBody = {
           contents: [{
             parts: [
@@ -211,7 +211,7 @@ RULES:
         }
       } catch (error) {
         console.log(`✗ Model ${model.name} failed: ${error.response?.status} ${error.response?.statusText || error.message}`);
-        // Continue to next model
+        
       }
     }
 
@@ -219,14 +219,14 @@ RULES:
       throw new Error('All models failed. Please check your API key and try again.');
     }
 
-    // Extract the text from the response
+    
     let text = responseData.candidates[0].content.parts[0].text;
     console.log('Raw AI response (first 200 chars):', text.substring(0, 200));
 
-    // Clean up the response
+    
     text = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
 
-    // Parse the JSON response
+    
     let generatedContent;
     try {
       generatedContent = JSON.parse(text);
@@ -234,13 +234,13 @@ RULES:
       console.error('JSON parse error:', parseError);
       console.error('Cleaned response:', text.substring(0, 500));
       
-      // Fallback: try to extract JSON from the response
+      
       const jsonMatch = text.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         try {
           generatedContent = JSON.parse(jsonMatch[0]);
         } catch (e) {
-          // Create fallback structure
+          
           generatedContent = {
             assignments: [
               {
@@ -272,7 +272,7 @@ RULES:
       }
     }
 
-    // Clean up uploaded files after processing
+    
     await Promise.all(
       files.map(file => fs.unlink(file.path).catch(err => console.error('Cleanup error:', err)))
     );
@@ -292,7 +292,7 @@ RULES:
   }
 });
 
-// POST: Save generated content to database
+
 router.post('/save', async (req, res) => {
   try {
     const { teacherId, teacherName, originalFileName, fileType, assignments, flashcards, summaries, matchedTopics, modelUsed } = req.body;
@@ -304,7 +304,7 @@ router.post('/save', async (req, res) => {
     console.log("DEBUG: contentData being saved:", JSON.stringify(req.body, null, 2));
     console.log("DEBUG: Saving content to MongoDB...");
 
-    // Create new content document
+    
     const newContent = new Content({
       teacherId,
       teacherName,
@@ -320,7 +320,7 @@ router.post('/save', async (req, res) => {
       downloads: 0
     });
 
-    // Save to database
+    
     await newContent.save();
 
     console.log("DEBUG: Content saved successfully with ID:", newContent._id);
@@ -342,7 +342,7 @@ router.post('/save', async (req, res) => {
 });
 
 
-// GET: Fetch teacher's content
+
 router.get('/teacher/:teacherId', async (req, res) => {
   try {
     const { teacherId } = req.params;
@@ -371,7 +371,7 @@ router.get('/teacher/:teacherId', async (req, res) => {
   }
 });
 
-// DELETE: Delete content
+
 router.delete('/:contentId', async (req, res) => {
   try {
     const { contentId } = req.params;

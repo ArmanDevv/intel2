@@ -18,32 +18,32 @@ const MyContent = () => {
   const [selectedContent, setSelectedContent] = useState(null);
   const [filterStatus, setFilterStatus] = useState('all');
 
-  // replace hardcoded teacherId with state that reads localStorage
+  
   const [teacherId, setTeacherId] = useState('');
 
   useEffect(() => {
-    // read saved user from localStorage (saved as "user" in Login.jsx)
+    
     try {
       const raw = localStorage.getItem('user');
       if (raw) {
         const parsed = JSON.parse(raw);
-        // try common id paths returned by your backend
+        
         const id = parsed._id || parsed.id || parsed.user?._id || parsed.user?.id || parsed.userId;
         if (id) setTeacherId(id);
       }
     } catch (e) {
-      // ignore parse errors
+     
     }
   }, []);
 
   useEffect(() => {
-    // fetch when teacherId is available or when filter changes
+    
     if (!teacherId) {
       setLoading(false);
       return;
     }
     fetchContent();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    
   }, [filterStatus, teacherId]);
 
   const fetchContent = async () => {
@@ -119,14 +119,14 @@ const MyContent = () => {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
-      {/* Header */}
+      
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">My Content</h1>
           <p className="text-gray-600 mt-1">View and manage your uploaded educational content</p>
         </div>
         
-        {/* Filter */}
+        
         <div className="flex gap-2">
           <button
             onClick={() => setFilterStatus('all')}
@@ -161,14 +161,14 @@ const MyContent = () => {
         </div>
       </div>
 
-      {/* Error Display */}
+      
       {error && (
         <div className="card bg-red-50 border-red-200">
           <p className="text-red-800">{error}</p>
         </div>
       )}
 
-      {/* Content List */}
+      
       {contents.length === 0 ? (
         <div className="card text-center py-12">
           <DocumentIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />
@@ -182,7 +182,7 @@ const MyContent = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {contents.map((content) => (
             <div key={content._id} className="card hover:shadow-lg transition-shadow">
-              {/* Header */}
+              
               <div className="flex items-start justify-between mb-3">
                 <div className="flex-1">
                   <h3 className="font-semibold text-gray-900 mb-1 line-clamp-2">
@@ -204,7 +204,7 @@ const MyContent = () => {
                 </span>
               </div>
 
-              {/* Stats */}
+             
               <div className="grid grid-cols-3 gap-3 mb-4">
                 <div className="bg-blue-50 rounded-lg p-3 text-center">
                   <p className="text-2xl font-bold text-blue-600">
@@ -226,7 +226,7 @@ const MyContent = () => {
                 </div>
               </div>
 
-              {/* Topics */}
+              
               {content.matchedTopics && content.matchedTopics.length > 0 && (
                 <div className="mb-4">
                   <div className="flex flex-wrap gap-1">
@@ -244,7 +244,7 @@ const MyContent = () => {
                 </div>
               )}
 
-              {/* Actions */}
+              
               <div className="flex items-center gap-2 pt-3 border-t border-gray-200">
                 <button
                   onClick={() => viewContent(content)}
@@ -262,7 +262,7 @@ const MyContent = () => {
                 </button>
               </div>
 
-              {/* Metadata */}
+              
               <div className="mt-3 pt-3 border-t border-gray-200 flex items-center justify-between text-xs text-gray-500">
                 <div className="flex items-center gap-1">
                   <EyeIcon className="h-4 w-4" />
@@ -278,7 +278,7 @@ const MyContent = () => {
         </div>
       )}
 
-      {/* Detail Modal */}
+      
       {selectedContent && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
@@ -297,7 +297,7 @@ const MyContent = () => {
             </div>
 
             <div className="p-6 space-y-6">
-              {/* Assignments */}
+              
               {selectedContent.assignments && selectedContent.assignments.length > 0 && (
   <div>
     <h3 className="text-lg font-semibold mb-3">Assignments</h3>
@@ -318,7 +318,7 @@ const MyContent = () => {
             </span>
           </div>
 
-          {/* Questions section */}
+         
           {assignment.questions && assignment.questions.length > 0 && (
             <details className="mt-3">
               <summary className="cursor-pointer font-semibold text-blue-600">
@@ -329,7 +329,7 @@ const MyContent = () => {
                   <li key={i} className="text-sm text-gray-800">
                     <p><strong>Q{i + 1}:</strong> {q.questionText}</p>
 
-                    {/* Options if available */}
+                    
                     {q.options && q.options.length > 0 && (
                       <ul className="ml-5 list-decimal text-gray-700">
                         {q.options.map((opt, j) => (
@@ -352,7 +352,7 @@ const MyContent = () => {
   </div>
 )}
 
-              {/* Flashcards */}
+              
               {selectedContent.flashcards && selectedContent.flashcards.length > 0 && (
                 <div>
                   <h3 className="text-lg font-semibold mb-3">Flashcards</h3>
@@ -367,7 +367,7 @@ const MyContent = () => {
                 </div>
               )}
 
-              {/* Summary */}
+              
               {selectedContent.summaries && selectedContent.summaries.length > 0 && (
                 <div>
                   <h3 className="text-lg font-semibold mb-3">Summary</h3>

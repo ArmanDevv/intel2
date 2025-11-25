@@ -87,7 +87,7 @@ const TeacherDashboard = () => {
 
   const [contentCounts, setContentCounts] = useState({ assignments: 0, flashcards: 0, summaries: 0 });
   
-    // Build content types for UI using fetched counts
+    
     const contentTypes = [
       { name: 'Assignments', count: contentCounts.assignments || 0, color: 'text-blue-600', bg: 'bg-blue-100' },
       { name: 'Flashcards', count: contentCounts.flashcards || 0, color: 'text-green-600', bg: 'bg-green-100' },
@@ -120,17 +120,18 @@ const TeacherDashboard = () => {
     fetchContentCounts();
   }, []);
 
-  if (!user) return null; // prevent rendering before user is loaded
+  if (!user) return null; 
 
   return (
     <div className="space-y-8">
-      {/* Welcome Section */}
+      
       <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-2xl p-8 text-white">
         <h1 className="text-3xl font-bold mb-2">Welcome, {user.name}!</h1>
         <p className="text-purple-100 text-lg">Ready to create amazing learning experiences?</p>
       </div>
 
-      {/* Quick Actions */}
+
+      
       <div>
         <h2 className="text-xl font-semibold text-gray-900 mb-6">Quick Actions</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -154,7 +155,7 @@ const TeacherDashboard = () => {
         </div>
       </div>
 
-      {/* Generated Content Overview */}
+      
       <div>
         <h2 className="text-xl font-semibold text-gray-900 mb-6">Generated Content Overview</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -170,6 +171,8 @@ const TeacherDashboard = () => {
           ))}
         </div>
       </div>
+
+      
     </div>
   );
 };

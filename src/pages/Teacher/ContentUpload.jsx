@@ -22,11 +22,11 @@ const ContentUpload = () => {
   const [uploadMetadata, setUploadMetadata] = useState({ fileName: '', fileType: '', modelUsed: '' });
   const [notification, setNotification] = useState(null);
 
-  // Function to download assignment as PDF/Text
+  
   const downloadAssignment = (assignment, format = 'txt') => {
     let content = '';
     
-    // Build assignment content
+
     content += `${assignment.title}\n`;
     content += `${'='.repeat(assignment.title.length)}\n\n`;
     content += `Type: ${assignment.type}\n`;
@@ -40,7 +40,6 @@ const ContentUpload = () => {
     
     content += `${'='.repeat(50)}\n\n`;
     
-    // Add questions
     if (assignment.questions && assignment.questions.length > 0) {
       assignment.questions.forEach((q, index) => {
         content += `Question ${q.questionNumber || index + 1} (${q.points || 10} points)\n`;
@@ -67,7 +66,7 @@ const ContentUpload = () => {
       content += 'Questions will be generated based on the content.\n';
     }
     
-    // Create and download file
+
     const blob = new Blob([content], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
@@ -89,7 +88,7 @@ const ContentUpload = () => {
         formData.append('files', file);
       });
 
-      // Upload files to backend
+      
       const response = await axios.post('http://localhost:5000/api/content/upload', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -111,7 +110,7 @@ const ContentUpload = () => {
     setError(null);
 
     try {
-      // Send files to Gemini for processing
+      
       const response = await axios.post('http://localhost:5000/api/content/process', {
         files: uploadedFiles
       });
@@ -143,7 +142,7 @@ const ContentUpload = () => {
   setError(null);
 
   try {
-    // Get teacherId from localStorage
+    
     const userStr = localStorage.getItem('user');
     if (!userStr) {
       throw new Error('Please login to save content');
@@ -157,7 +156,7 @@ const ContentUpload = () => {
       throw new Error('Teacher ID not found. Please login again.');
     }
 
-    // Prepare data to save
+    
     const contentData = {
       teacherId,
       teacherName,
@@ -170,9 +169,9 @@ const ContentUpload = () => {
       modelUsed: uploadMetadata.modelUsed || 'Gemini AI'
     };
 
-// DEBUG: show exactly what we're about to send to the server
+
 console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null, 2));
-    // Save to backend
+    
     const response = await axios.post('http://localhost:5000/api/content/save', contentData);
 
     if (response.data.success) {
@@ -180,7 +179,7 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
       setNotification({ type: 'success', title: 'Content Saved', message: msg });
       setTimeout(() => setNotification(null), 5000);
 
-      // Reset form
+      
       setCurrentStep(1);
       setUploadedFiles([]);
       setGeneratedContent(null);
@@ -201,7 +200,7 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
 
   return (
     <div className="max-w-4xl mx-auto space-y-8">
-      {/* Header */}
+      
       <div className="text-center">
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Upload Content</h1>
         <p className="text-gray-600">Upload educational materials and let AI generate learning content</p>
@@ -215,7 +214,7 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
           onClose={() => setNotification(null)}
         />
       )}
-      {/* Error Display */}
+      
       {error && (
         <div className="card bg-red-50 border-red-200">
           <div className="flex items-start">
@@ -228,10 +227,10 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
         </div>
       )}
 
-      {/* Step 1: File Upload */}
+      
       {currentStep === 1 && (
         <div className="space-y-6">
-          {/* Upload Area */}
+          
           <div className="card">
             <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-primary-300 transition-colors">
               <input
@@ -254,7 +253,7 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
             </div>
           </div>
 
-          {/* Uploaded Files */}
+          
           {uploadedFiles.length > 0 && (
             <div className="card">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Uploaded Files</h3>
@@ -298,7 +297,7 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
             </div>
           )}
 
-          {/* Upload Guidelines */}
+          
           <div className="card bg-blue-50 border-blue-200">
             <div className="flex items-start">
               <ExclamationIcon className="h-6 w-6 text-blue-600 mr-3 mt-1" />
@@ -317,7 +316,7 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
         </div>
       )}
 
-      {/* Step 2: Processing */}
+      
       {currentStep === 2 && (
         <div className="card text-center py-12">
           <LoadingSpinner size="xl" className="mb-6" />
@@ -344,7 +343,7 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
         </div>
       )}
 
-      {/* Step 3: Results */}
+      
       {currentStep === 3 && generatedContent && (
         <div className="space-y-6">
           <div className="card">
@@ -374,7 +373,6 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
             </div>
           </div>
 
-          {/* Generated Assignments - Enhanced with expand/collapse */}
           {generatedContent.assignments && generatedContent.assignments.length > 0 && (
             <div className="card">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Generated Assignments</h3>
@@ -414,7 +412,7 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
                     {expandedAssignment === index && (
                       <div className="p-4 bg-white border-t border-gray-200">
                         <div className="space-y-4">
-                          {/* Assignment Header Info */}
+
                           <div className="flex items-center justify-between pb-3 border-b border-gray-200">
                             <div>
                               <h5 className="font-semibold text-gray-900 mb-1">Assignment Overview</h5>
@@ -444,7 +442,7 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
                             </div>
                           )}
                           
-                          {/* Display Questions */}
+                          
                           {assignment.questions && assignment.questions.length > 0 ? (
                             <div className="space-y-4">
                               <h5 className="font-semibold text-gray-900">Questions:</h5>
@@ -516,7 +514,7 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
             </div>
           )}
 
-          {/* Generated Flashcards - Show All */}
+          
           {generatedContent.flashcards && generatedContent.flashcards.length > 0 && (
             <div className="card">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">
@@ -539,7 +537,7 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
             </div>
           )}
 
-          {/* Summaries */}
+          
           {generatedContent.summaries && generatedContent.summaries.length > 0 && (
             <div className="card">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Content Summary</h3>
@@ -562,7 +560,7 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
             </div>
           )}
 
-          {/* Matched Topics */}
+          
           {generatedContent.matchedTopics && generatedContent.matchedTopics.length > 0 && (
             <div className="card">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Matched Student Topics</h3>
@@ -579,7 +577,7 @@ console.log('DEBUG: contentData being saved:', JSON.stringify(contentData, null,
             </div>
           )}
 
-          {/* Action Buttons */}
+          
           <div className="flex justify-center space-x-4">
             <button
               onClick={() => {
